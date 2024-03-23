@@ -6,6 +6,7 @@ This code is modified from https://github.com/zengqunzhao/EfficientFace/blob/mas
 import torch
 import torch.nn as nn
 
+
 def depthwise_conv(i, o, kernel_size, stride=1, padding=0, bias=False):
     return nn.Conv2d(i, o, kernel_size, stride, padding, bias=bias, groups=i)
 
@@ -30,24 +31,40 @@ class LocalFeatureExtractor(nn.Module):
         norm_layer = nn.BatchNorm2d
         self.relu = nn.ReLU()
 
-        self.conv1_1 = depthwise_conv(inplanes, planes, kernel_size=3, stride=2, padding=1)
+        self.conv1_1 = depthwise_conv(
+            inplanes, planes, kernel_size=3, stride=2, padding=1
+        )
         self.bn1_1 = norm_layer(planes)
-        self.conv1_2 = depthwise_conv(planes, planes, kernel_size=3, stride=1, padding=1)
+        self.conv1_2 = depthwise_conv(
+            planes, planes, kernel_size=3, stride=1, padding=1
+        )
         self.bn1_2 = norm_layer(planes)
 
-        self.conv2_1 = depthwise_conv(inplanes, planes, kernel_size=3, stride=2, padding=1)
+        self.conv2_1 = depthwise_conv(
+            inplanes, planes, kernel_size=3, stride=2, padding=1
+        )
         self.bn2_1 = norm_layer(planes)
-        self.conv2_2 = depthwise_conv(planes, planes, kernel_size=3, stride=1, padding=1)
+        self.conv2_2 = depthwise_conv(
+            planes, planes, kernel_size=3, stride=1, padding=1
+        )
         self.bn2_2 = norm_layer(planes)
 
-        self.conv3_1 = depthwise_conv(inplanes, planes, kernel_size=3, stride=2, padding=1)
+        self.conv3_1 = depthwise_conv(
+            inplanes, planes, kernel_size=3, stride=2, padding=1
+        )
         self.bn3_1 = norm_layer(planes)
-        self.conv3_2 = depthwise_conv(planes, planes, kernel_size=3, stride=1, padding=1)
+        self.conv3_2 = depthwise_conv(
+            planes, planes, kernel_size=3, stride=1, padding=1
+        )
         self.bn3_2 = norm_layer(planes)
 
-        self.conv4_1 = depthwise_conv(inplanes, planes, kernel_size=3, stride=2, padding=1)
+        self.conv4_1 = depthwise_conv(
+            inplanes, planes, kernel_size=3, stride=2, padding=1
+        )
         self.bn4_1 = norm_layer(planes)
-        self.conv4_2 = depthwise_conv(planes, planes, kernel_size=3, stride=1, padding=1)
+        self.conv4_2 = depthwise_conv(
+            planes, planes, kernel_size=3, stride=1, padding=1
+        )
         self.bn4_2 = norm_layer(planes)
 
     def forward(self, x):
@@ -97,7 +114,7 @@ class InvertedResidual(nn.Module):
         super(InvertedResidual, self).__init__()
 
         if not (1 <= stride <= 3):
-            raise ValueError('illegal stride value')
+            raise ValueError("illegal stride value")
         self.stride = stride
 
         branch_features = oup // 2
@@ -107,20 +124,43 @@ class InvertedResidual(nn.Module):
             self.branch1 = nn.Sequential(
                 depthwise_conv(inp, inp, kernel_size=3, stride=self.stride, padding=1),
                 nn.BatchNorm2d(inp),
-                nn.Conv2d(inp, branch_features, kernel_size=1, stride=1, padding=0, bias=False),
+                nn.Conv2d(
+                    inp, branch_features, kernel_size=1, stride=1, padding=0, bias=False
+                ),
                 nn.BatchNorm2d(branch_features),
-                nn.ReLU(inplace=True))
+                nn.ReLU(inplace=True),
+            )
 
         self.branch2 = nn.Sequential(
-            nn.Conv2d(inp if (self.stride > 1) else branch_features,
-                      branch_features, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.Conv2d(
+                inp if (self.stride > 1) else branch_features,
+                branch_features,
+                kernel_size=1,
+                stride=1,
+                padding=0,
+                bias=False,
+            ),
             nn.BatchNorm2d(branch_features),
             nn.ReLU(inplace=True),
-            depthwise_conv(branch_features, branch_features, kernel_size=3, stride=self.stride, padding=1),
+            depthwise_conv(
+                branch_features,
+                branch_features,
+                kernel_size=3,
+                stride=self.stride,
+                padding=1,
+            ),
             nn.BatchNorm2d(branch_features),
-            nn.Conv2d(branch_features, branch_features, kernel_size=1, stride=1, padding=0, bias=False),
+            nn.Conv2d(
+                branch_features,
+                branch_features,
+                kernel_size=1,
+                stride=1,
+                padding=0,
+                bias=False,
+            ),
             nn.BatchNorm2d(branch_features),
-            nn.ReLU(inplace=True))
+            nn.ReLU(inplace=True),
+        )
 
     def forward(self, x):
         if self.stride == 1:
@@ -132,4 +172,3 @@ class InvertedResidual(nn.Module):
         out = channel_shuffle(out, 2)
 
         return out
-

@@ -1,16 +1,18 @@
-'''
+"""
 Parts of this code are based on https://github.com/okankop/Efficient-3DCNNs
-'''
+"""
 
 import random
 import numbers
 import numpy as np
 import torch
 from PIL import Image
+
 try:
     import accimage
 except ImportError:
     accimage = None
+
 
 class Compose(object):
     """Composes several transforms together.
@@ -28,7 +30,7 @@ class Compose(object):
 
     def __call__(self, img):
         for t in self.transforms:
-            
+
             img = t(img)
         return img
 
@@ -60,22 +62,21 @@ class ToTensor(object):
             return img.float().div(self.norm_value)
 
         if accimage is not None and isinstance(pic, accimage.Image):
-            nppic = np.zeros(
-                [pic.channels, pic.height, pic.width], dtype=np.float32)
+            nppic = np.zeros([pic.channels, pic.height, pic.width], dtype=np.float32)
             pic.copyto(nppic)
             return torch.from_numpy(nppic)
 
         # handle PIL Image
-        if pic.mode == 'I':
+        if pic.mode == "I":
             img = torch.from_numpy(np.array(pic, np.int32, copy=False))
-        elif pic.mode == 'I;16':
+        elif pic.mode == "I;16":
             img = torch.from_numpy(np.array(pic, np.int16, copy=False))
         else:
             img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
         # PIL image mode: 1, L, P, I, F, RGB, YCbCr, RGBA, CMYK
-        if pic.mode == 'YCbCr':
+        if pic.mode == "YCbCr":
             nchannel = 3
-        elif pic.mode == 'I;16':
+        elif pic.mode == "I;16":
             nchannel = 1
         else:
             nchannel = len(pic.mode)
@@ -83,7 +84,7 @@ class ToTensor(object):
         # put it from HWC to CHW format
         # yikes, this transpose takes 80% of the loading time/CPU
         img = img.transpose(0, 1).transpose(0, 2).contiguous()
-        #print(img.size(), img.float().div(self.norm_value)) 
+        # print(img.size(), img.float().div(self.norm_value))
         if isinstance(img, torch.ByteTensor):
             return img.float().div(self.norm_value)
         else:
@@ -91,8 +92,6 @@ class ToTensor(object):
 
     def randomize_parameters(self):
         pass
-
-
 
 
 class CenterCrop(object):
@@ -118,8 +117,8 @@ class CenterCrop(object):
         """
         w, h = img.size
         th, tw = self.size
-        x1 = int(round((w - tw) / 2.))
-        y1 = int(round((h - th) / 2.))
+        x1 = int(round((w - tw) / 2.0))
+        y1 = int(round((h - th) / 2.0))
         return img.crop((x1, y1, x1 + tw, y1 + th))
 
     def randomize_parameters(self):
@@ -157,4 +156,3 @@ class RandomRotate(object):
 
     def randomize_parameters(self):
         self.rotate_angle = random.randint(-10, 10)
-
