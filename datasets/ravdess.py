@@ -24,7 +24,7 @@ def get_default_video_loader():
 
 
 def load_audio(audiofile, sr):
-    audios = librosa.core.load(audiofile, sr)
+    audios = librosa.core.load(audiofile, sr=sr)
     y = audios[0]
     return y, sr
 
