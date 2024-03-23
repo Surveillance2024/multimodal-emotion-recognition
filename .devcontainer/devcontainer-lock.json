@@ -1,0 +1,19 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {
+      "version": "2.0.17",
+      "resolved": "ghcr.io/devcontainers-contrib/features/poetry@sha256:85ad0e0190682104214e5ae4faa2bf8c2e181802567c01db0ef2dc9a70790f32",
+      "integrity": "sha256:85ad0e0190682104214e5ae4faa2bf8c2e181802567c01db0ef2dc9a70790f32"
+    },
+    "ghcr.io/devcontainers/features/conda:1": {
+      "version": "1.0.9",
+      "resolved": "ghcr.io/devcontainers/features/conda@sha256:245b89453a017490401090692650c6bad5c41159be58a7a13d7a95d542af5c7d",
+      "integrity": "sha256:245b89453a017490401090692650c6bad5c41159be58a7a13d7a95d542af5c7d"
+    },
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "version": "1.0.2",
+      "resolved": "ghcr.io/rocker-org/devcontainer-features/apt-packages@sha256:87a4d7750a596a5db034ba8508782f31aebdc2ffe955c66aaecb33d9de2ecdae",
+      "integrity": "sha256:87a4d7750a596a5db034ba8508782f31aebdc2ffe955c66aaecb33d9de2ecdae"
+    }
+  }
+}
