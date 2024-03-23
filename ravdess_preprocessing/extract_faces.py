@@ -36,6 +36,7 @@ for sess in tqdm(sorted(os.listdir(root))):
                 if not i:
                     break
                 framen += 1
+            cap.release()
             cap = cv2.VideoCapture(os.path.join(root, sess, filename))
 
             if save_length * input_fps > framen:
@@ -92,6 +93,7 @@ for sess in tqdm(sorted(os.listdir(root))):
                 if save_avi:
                     out.write(im)
                 numpy_video.append(im)
+            cap.release()
             if len(frames_to_select) > 0:
                 for i in range(len(frames_to_select)):
                     if save_avi:
