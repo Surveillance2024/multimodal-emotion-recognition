@@ -21,7 +21,7 @@ class NumpyArray(Dataset):
 
     def __getitem__(self, index):
         imgs = [self.spatial_transform(x) for x in self.data]
-        imgs = torch.stack(imgs, 0).permute(1, 0, 2, 3)
+        imgs = torch.stack(imgs, 0)
 
         fake_audio = torch.randn((10, 156))
         return fake_audio, imgs
