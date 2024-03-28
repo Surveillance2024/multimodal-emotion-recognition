@@ -78,7 +78,9 @@ def main():
     )
     images = [*islice(camera, 15)]
     images = NumpyArray(images, video_transform)
-    image_loader = DataLoader(images, 1, shuffle=False, num_workers=opt.n_threads)
+    image_loader = DataLoader(
+        images, opt.batch_size, shuffle=False, num_workers=opt.n_threads
+    )
     for inputs_audio, inputs_visual in image_loader:
         inputs_visual = inputs_visual.reshape(
             inputs_visual.shape[0] * inputs_visual.shape[1],
