@@ -76,6 +76,7 @@ def main():
             transforms.ToTensor(opt.video_norm_value),
         ]
     )
+    # 每個dataset一定只能15張
     images = [*islice(camera, 15)]
     images = NumpyArray(images, video_transform)
     image_loader = DataLoader(
