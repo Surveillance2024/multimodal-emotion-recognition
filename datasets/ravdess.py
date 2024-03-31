@@ -79,6 +79,8 @@ class RAVDESS(data.Dataset):
             if self.spatial_transform is not None:
                 self.spatial_transform.randomize_parameters()
                 clip = [self.spatial_transform(img) for img in clip]
+            # 將clip中的數個frame變成List[frame]，也就是[N,C,H,W]4個維度
+            # 接著再將各個維度的順序調換，變成[C,N,H,W]
             clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
 
             if self.data_type == "video":
