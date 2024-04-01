@@ -4,6 +4,7 @@ import os
 from typing import List
 import cv2
 import numpy as np
+import pandas as pd
 import torch
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
@@ -94,6 +95,25 @@ def readFromFiles(dirPath: str) -> List[np.ndarray]:
     return images
 
 
+def readFromICML():
+    # columns: "emotion", " Usage", " pixels"
+    df = pd.read_csv("icml_face_data.csv")
+    # 圖片變成48*48，然後變成「彩色」圖片
+    images = [
+        np.repeat(
+            np.array(list(map(int, row.split(" "))), np.uint8).reshape(48, 48)[
+                :, :, np.newaxis
+            ],
+            repeats=3,
+            axis=-1,
+        )
+        for row in df[" pixels"]
+    ]
+    # images = np.stack(images)
+    # images = np.repeat(images[:, :, :, np.newaxis], repeats=3, axis=-1)
+    return images
+
+
 def main():
     logger.info("Launching with opts: ", opt)
 
@@ -115,6 +135,11 @@ def main():
     print(result)
 
     """Read from API"""
+
+    """Read from ICML"""
+    # images = readFromICML()
+    # result = predictNumpyArray(images, model)
+    # print(result)
 
 
 def testMain():
